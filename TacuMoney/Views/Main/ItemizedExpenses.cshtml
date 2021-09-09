@@ -1,0 +1,109 @@
+﻿
+@using TacuDataAccess.Models
+@model CatagoryLists
+<h1> hello</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">First</th>
+            <th scope="col">Last</th>
+            <th scope="col">Handle</th>
+        </tr>
+    </thead>
+    <tbody>
+        @*<tr>
+            <th scope="row">amazon</th>
+            <td>@Model.Amazon.Where(x => x.CrDr == "DR").Sum(x => x.Amount)</td>
+            <td>@Model.Amazon.Count</td>
+
+        </tr>*@
+        <tr>
+            <th scope="row"> Resruants</th>
+            <td>@Model.Restruant?.Sum(x => x.Amount)</td>
+            <td>@Model.Restruant?.Count()</td>
+
+        </tr>
+        <tr>
+            <th scope="row">Gas</th>
+            <td colspan="2">@Model.Gas?.Sum(x => x.Amount)</td>
+            <td colspan="2">@Model.Gas?.Count()</td>
+
+        </tr>
+        @*<tr>
+            <th scope="row">Gas</th>
+            <td colspan="2">@Model.Gas.Where(x => x.CrDr == "DR").Sum(x => x.Amount)</td>
+            <td colspan="2">@Model.Gas.Count()</td>
+
+        </tr>*@
+        
+        <tr>
+            <th scope="row">Grocerys</th>
+            <td colspan="2">@Model.Grocerys?.Sum(x => x.Amount)</td>
+            <td colspan="2">@Model.Grocerys?.Count()</td>
+
+        </tr>
+        @*@foreach(var res in Model.Restruant)
+        {
+            <tr>
+                <td>@res.Amount.</td>
+                <td> @res.Description.</td>
+            </tr>
+
+        }*@
+        <tr>
+            <th scope="row">Student Loans</th>
+            <td colspan="2">@Model.StudentLoans?.Sum(x => x.Amount)</td>
+            <td colspan="2">@Model.StudentLoans?.Count()</td>
+
+        </tr>
+        <tr>
+            <th scope="row">Automitive</th>
+            <td colspan="2">@Model.Automotive?.Sum(x => x.Amount)</td>
+            <td colspan="2">@Model.Automotive?.Count()</td>
+
+        </tr>
+        
+        <tr>
+            <th scope="row">UtilitiesRent</th>
+            <td colspan="2">@Model.UtilitiesRent?.Sum(x => x.Amount)</td>
+            <td colspan="2">@Model.UtilitiesRent?.Count()</td>
+        </tr>
+        <tr>
+            <th scope="row">WithDrawls</th>
+            <td colspan="2">@Model.WithDrawls?.Sum(x => x.Amount)</td>
+            <td colspan="2">@Model.WithDrawls?.Count()</td>
+        </tr>
+        <tr>
+            <th scope="row">Merchandise</th>
+            <td colspan="2">@Model.Merchandise?.Sum(x => x.Amount)</td>
+            <td>@Model.Merchandise?.Count()</td>
+        </tr>
+        <tr>
+            <th scope="row">Bad Habit</th>
+            <td colspan="2">@Model.BadHabit?.Sum(x => x.Amount)</td>
+            <td> @Model.BadHabit?.Count()</td>
+        </tr>
+        <tr>
+            <th scope="row">Fun</th>
+            <td colspan="2">@Model.Fun?.Sum(x => x.Amount)</td>
+            <td colspan="2">@Model.Fun?.Count()</td>
+        </tr>
+        <tr>
+            <th scope="row">Other</th>
+            <td colspan="2">@Model.Other?.Sum(x => x.Amount)</td>
+            <td colspan="2">@Model.Other?.Count()</td>
+        </tr>
+    </tbody>
+</table>
+@*<p> @Model.Amazon.Sum( x => x.CrDr == "Dr" ? x.Amount : 0  )</p>*@
+<p> </p> <p></p>
+
+@*@foreach (var i in Model.Other)
+{
+<div>
+    <p>@i.Id</p>
+    <p>@i.Description </p>
+</div>
+
+}*@
