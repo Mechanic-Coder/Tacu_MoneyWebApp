@@ -1,0 +1,70 @@
+﻿@using TacuDataAccess.Models
+@model ManageCategorys
+<form method="post" action="/Config/EditCategory">
+    <input type="hidden" name="category" value="@Model.SelectedCategory" />
+
+
+    
+    @{await Html.RenderPartialAsync("Nav/CategoryTab", new TabModel
+        {
+            Action = "EditCategory",
+            Controller = "config",
+            CurrentPage = Model.SelectedCategory
+        }); }
+    @*<ul class="nav nav-tabs">
+            @foreach(var cate in Model.Categorys)
+                {
+
+                    <li class="nav-item">
+                        <a class="nav-link @(Model.SelectedCategory == cate? "active": "")" aria-current="page" href="/config/EditCategory?category=@cate">@cate</a>
+                    </li>
+                }
+        </ul>*@
+    <table class="table">
+        <thead>
+            <tr>
+                <td> Name </td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var t in Model.Terms)
+            {
+                <tr>
+                    <td><input name="name" value="@t.Name" /> <button type="button" data-role="delete"> delete</button></td>
+                </tr>
+            }
+            <tr>
+                <td><input name="name" /> <button type="button" id="add" class="btn "> Add </button> </td>
+            </tr>
+        </tbody>
+        <tfoot>
+        </tfoot>
+    </table>
+    <button type="submit"> Save</button>
+
+
+</form>
+
+@section Scripts{
+
+
+    <script>
+    $(function () {
+        $("#add").click((e) => {
+            var $target = $(e.target)
+            var parentTr = $target.closest("tr")
+            var input = parentTr.find("input").first()
+            $(`<tr><td><input name="Name" value="${input.val()}" /> <button type="button" data-role="delete"> delete</button></td></tr>`).insertBefore(parentTr)
+            input.val("")
+        })
+
+        $("tbody").click((e) => {
+            var $target = $(e.target)
+            var parentTr = $target.closest("tr")
+            if($target.attr("data-role") == "delete") {
+                parentTr.remove()
+            }
+        })
+    })
+    </script>
+ }

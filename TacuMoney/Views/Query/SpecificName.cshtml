@@ -1,0 +1,31 @@
+﻿@model SpecificNameModel;
+
+<h2> @Model.Name</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col"> Posted Date</th>
+            <th scope="col">Description</th>
+            <th scope="col">
+                Amount
+                @{var amount = Model.Records.Sum(x => x.Amount);}
+                @if (amount != null)
+                {
+                    <span>
+                        $@amount?.ToString("#.00")
+                    </span>
+                }
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model.Records)
+        {
+            <tr>
+                <th scope="row">@r.PostedDate?.ToString("MM/dd/yyyy")</th>
+                <td>@r.Description</td>
+                <td>@r.Amount</td>
+            </tr>
+        }
+    </tbody>
+</table>

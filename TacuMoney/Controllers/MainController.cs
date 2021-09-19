@@ -28,6 +28,42 @@ namespace TacuMoney.Controllers
 
             return View(test);
         }
+
+        //only for creating tables
+        //public IActionResult MigrateToTable()
+        //{
+        //    //var test = _db.SingularKeyWords.ToList();
+
+        //    //var newDat = new Category
+        //    //{
+        //    //    Name = "Krogers",
+        //    //    KeyWord = KeyWordEnum.Grocerys
+        //    //};
+        //    var AddTo = _db.KeyWords.Select(x => new Category { Name = x.Restruant, KeyWord = "Restruant" }).ToList();
+
+        //    AddTo.AddRange(_db.KeyWords.Where(x => x.Restruant != null).Select(x => new Category { Name = x.Restruant, KeyWord= "Restruant"}).ToList());
+
+        //    AddTo.AddRange(_db.KeyWords.Where(x => x.Gas != null).Select(x => new Category { Name = x.Gas, KeyWord = "Gas"}).ToList());
+
+        //    AddTo.AddRange(_db.KeyWords.Where(x => x.StudentLoans != null).Select(x => new Category { Name = x.StudentLoans, KeyWord = "StudentLoans"}).ToList());
+        //    AddTo.AddRange(_db.KeyWords.Where(x => x.Automotive != null).Select(x => new Category { Name = x.Automotive, KeyWord = "Automotive"}).ToList());
+        //    AddTo.AddRange(_db.KeyWords.Where(x => x.Amazon != null).Select(x => new Category { Name = x.Amazon, KeyWord = "Amazon"}).ToList());
+        //    AddTo.AddRange(_db.KeyWords.Where(x => x.Grocerys != null).Select(x => new Category { Name = x.Grocerys, KeyWord = "Grocerys"}).ToList());
+        //    AddTo.AddRange(_db.KeyWords.Where(x => x.UtilitiesRent != null).Select(x => new Category { Name = x.UtilitiesRent, KeyWord = "UtilitiesRent"}).ToList());
+        //    AddTo.AddRange(_db.KeyWords.Where(x => x.WithDrawls != null).Select(x => new Category { Name = x.WithDrawls, KeyWord = "WithDrawls"}).ToList());
+        //    AddTo.AddRange(_db.KeyWords.Where(x => x.Merchandise != null).Select(x => new Category { Name = x.Merchandise, KeyWord = "Merchandise"}).ToList());
+        //    AddTo.AddRange(_db.KeyWords.Where(x => x.BadHabit != null).Select(x => new Category { Name = x.BadHabit, KeyWord = "BadHabit"}).ToList());
+        //    AddTo.AddRange(_db.KeyWords.Where(x => x.Fun != null).Select(x => new Category { Name = x.Fun, KeyWord = "Fun"}).ToList());
+
+
+
+        //    _db.Categorys.AddRange(AddTo);
+        //    _db.SaveChanges();
+
+
+
+        //    return RedirectToAction("Index");
+        //}
         public IActionResult Raw()
         {
             var test = (DbSet<TestModel>)_db.Culocs.FromSqlRaw(@"select Distinct[TacuMoney].[dbo].[CULoc].Id, 
@@ -114,96 +150,160 @@ namespace TacuMoney.Controllers
             return await _db.Culocs.Where(lambda).ToListAsync();
         }
 
+        //public async Task<IActionResult> ItemizedExpensesAsync()
+        //{
+        //    /// learn about struct next
+        //    /// //Add mechanic coder git hub 
+        //    var model = new CatagoryLists();
+        //    //var another = await GetErrors("CrDr", "DR");
+        //    //var te = await GetContains("Description", "venmo");
+
+        //    //var tez = await GetContainsList("Description");
+        //    //var test = await GetContainsKeyWord("Description");
+
+        //    //foreach (var a in another)
+        //    //{
+        //    //    var g = a;
+        //    //}
+
+        //    //var maxCulLoc = _db.Culocs;
+        //    //var descList = new List<string> { "venmo", "Meijer", "krogers" }.AsQueryable();
+
+        //    //var t = CULocs.Where(x => descList.Any(d => x.Description.IndexOf(d) >= 0)).ToList();
+
+        //    //var test = maxCulLoc.Where(x => descList.Any(k => x.Description.Contains(k)));
+
+
+        //    //Expression<Func<KeyWord, string>> Catagory = x => x.Restruant;
+        //    //IQueryable<string> searchingFor = _db.KeyWords.Select(Catagory);
+        //    //Expression<Func<Culoc, bool>> stuff = x => searchingFor.Any(k => x.Description.Contains(k));
+
+
+        //    //IEnumerable<Culoc> rest = _db.Culocs.Where(stuff);
+
+        //    //var result = _db.Culocs.Where(stuff);
+        //    //model.Restruant = result;
+
+        //    //var AlreadyUsed = model.Restruant.Select(x => x.Id).ToHashSet();
+
+        //    var AlreadyUsed =  new List<int>();
+
+        //    (model.BadHabit, AlreadyUsed) = GetCategory(x => x.BadHabit, AlreadyUsed);
+        //    //var(new CatagoryLists(BadHabit = ), AlreadyUsed) = GetCategory(x => x.BadHabit, AlreadyUsed);
+        //    (model.Restruant, AlreadyUsed) = GetCategory(x => x.Restruant, AlreadyUsed);
+
+        //    (model.Gas, AlreadyUsed) = GetCategory(x => x.Gas, AlreadyUsed);
+        //    //model.Gas = GetCategory(x => x.Gas, AlreadyUsed, out AlreadyUsed);
+
+
+
+        //    (model.Grocerys, AlreadyUsed) = GetCategory(x => x.Grocerys, AlreadyUsed);
+        //    //model.Grocerys = GetCategory(x => x.Grocerys, AlreadyUsed, out AlreadyUsed);
+
+
+
+        //    (model.StudentLoans, AlreadyUsed) = GetCategory(x => x.StudentLoans, AlreadyUsed);
+        //    //model.StudentLoans = GetCategory(x => x.StudentLoans, AlreadyUsed, out AlreadyUsed);
+
+
+        //    (model.Automotive, AlreadyUsed) = GetCategory(x => x.Automotive, AlreadyUsed);
+        //    //model.Automotive = GetCategory(x => x.Automotive, AlreadyUsed, out AlreadyUsed);
+
+
+        //    (model.Amazon, AlreadyUsed) = GetCategory(x => x.Amazon, AlreadyUsed);
+        //    //model.Amazon = GetCategory(x => x.Amazon, AlreadyUsed, out AlreadyUsed);
+
+
+        //    (model.UtilitiesRent, AlreadyUsed) = GetCategory(x => x.UtilitiesRent, AlreadyUsed);
+        //    //model.UtilitiesRent = GetCategory(x => x.UtilitiesRent, AlreadyUsed, out AlreadyUsed);
+
+
+        //    (model.WithDrawls, AlreadyUsed) = GetCategory(x => x.WithDrawls, AlreadyUsed);
+        //    //model.WithDrawls = GetCategory(x => x.WithDrawls, AlreadyUsed, out AlreadyUsed);
+
+
+        //    (model.Merchandise, AlreadyUsed) = GetCategory(x => x.Merchandise, AlreadyUsed);
+        //    //model.Merchandise = GetCategory(x => x.Merchandise, AlreadyUsed, out AlreadyUsed);
+
+
+        //    //model.BadHabit = GetCategory(x => x.BadHabit, AlreadyUsed, out AlreadyUsed);
+
+
+        //    (model.Fun, AlreadyUsed) = GetCategory(x => x.Fun, AlreadyUsed);
+        //    //model.Fun = GetCategory(x => x.Fun, AlreadyUsed, out AlreadyUsed);
+
+
+        //    model.Other = _db.Culocs.Where(x => !AlreadyUsed.Contains(x.Id));
+
+        //    return View("ItemizedExpenses", model);
+        //}
+
         public async Task<IActionResult> ItemizedExpensesAsync()
         {
             /// learn about struct next
+            /// //Add mechanic coder git hub 
             var model = new CatagoryLists();
-            //var another = await GetErrors("CrDr", "DR");
-            //var te = await GetContains("Description", "venmo");
 
-            //var tez = await GetContainsList("Description");
-            //var test = await GetContainsKeyWord("Description");
+            model.BadHabit = GetCategory("BadHabit");
 
-            //foreach (var a in another)
-            //{
-            //    var g = a;
-            //}
+            model.Restruant = GetCategory("Restruant");
 
-            //var maxCulLoc = _db.Culocs;
-            //var descList = new List<string> { "venmo", "Meijer", "krogers" }.AsQueryable();
+            model.Gas = GetCategory("Gas");
 
-            //var t = CULocs.Where(x => descList.Any(d => x.Description.IndexOf(d) >= 0)).ToList();
+            model.Grocerys = GetCategory("Grocerys");
 
-            //var test = maxCulLoc.Where(x => descList.Any(k => x.Description.Contains(k)));
+            model.StudentLoans = GetCategory("StudentLoans");
 
+            model.Automotive = GetCategory("Automotive");
 
-            Expression<Func<KeyWord, string>> Catagory = x => x.Restruant;
-            IQueryable<string> searchingFor = _db.KeyWords.Select(Catagory);
-            Expression<Func<Culoc, bool>> stuff = x => searchingFor.Any(k => x.Description.Contains(k));
+            model.Amazon = GetCategory("Amazon");
 
-            
-            //IEnumerable<Culoc> rest = _db.Culocs.Where(stuff);
+            model.UtilitiesRent = GetCategory("UtilitiesRent");
 
-            var result = _db.Culocs.Where(stuff);
-            model.Restruant = result;
+            model.WithDrawls = GetCategory("WithDrawls");
 
-            var AlreadyUsed = model.Restruant.Select(x => x.Id).ToHashSet();
+            model.Merchandise = GetCategory("Merchandise");
 
-            //(model.Gas, AlreadyUsed) = GetCategory(x => x.Gas, AlreadyUsed);
-            model.Gas = GetCategory(x => x.Gas, AlreadyUsed, out AlreadyUsed);
-
-
-
-            //(model.Grocerys, AlreadyUsed) = GetCategory(x => x.Grocerys, AlreadyUsed);
-            model.Grocerys = GetCategory(x => x.Grocerys, AlreadyUsed, out AlreadyUsed);
-
-
-
-            //(model.StudentLoans, AlreadyUsed) = GetCategory(x => x.StudentLoans, AlreadyUsed);
-            model.StudentLoans = GetCategory(x => x.StudentLoans, AlreadyUsed, out AlreadyUsed);
-
-
-            //(model.Automotive, AlreadyUsed) = GetCategory(x => x.Automotive, AlreadyUsed);
-            model.Automotive = GetCategory(x => x.Automotive, AlreadyUsed, out AlreadyUsed);
-
-
-            //(model.Amazon, AlreadyUsed) = GetCategory(x => x.Amazon, AlreadyUsed);
-            model.Amazon = GetCategory(x => x.Amazon, AlreadyUsed, out AlreadyUsed);
-
-
-            //(model.UtilitiesRent, AlreadyUsed) = GetCategory(x => x.UtilitiesRent, AlreadyUsed);
-            model.UtilitiesRent = GetCategory(x => x.UtilitiesRent, AlreadyUsed, out AlreadyUsed);
-
-
-            //(model.WithDrawls, AlreadyUsed) = GetCategory(x => x.WithDrawls, AlreadyUsed);
-            model.WithDrawls = GetCategory(x => x.WithDrawls, AlreadyUsed, out AlreadyUsed);
-
-
-            //(model.Merchandise, AlreadyUsed) = GetCategory(x => x.Merchandise, AlreadyUsed);
-            model.Merchandise = GetCategory(x => x.Merchandise, AlreadyUsed, out AlreadyUsed);
-
-
-            //(model.BadHabit, AlreadyUsed) = GetCategory(x => x.BadHabit, AlreadyUsed);
-            model.BadHabit = GetCategory(x => x.BadHabit, AlreadyUsed, out AlreadyUsed);
-
-
-            //(model.Fun, AlreadyUsed) = GetCategory(x => x.Fun, AlreadyUsed);
-            model.Fun = GetCategory(x => x.Fun, AlreadyUsed, out AlreadyUsed);
-            
-
-            model.Other = _db.Culocs.Where(x => !AlreadyUsed.Contains(x.Id));
+            model.Fun = GetCategory("Fun");
 
             return View("ItemizedExpenses", model);
         }
 
 
-        private (IQueryable<Culoc>, HashSet<int>) GetCategory(Expression<Func<KeyWord, string>> Catagory, HashSet<int> nAlreadyUsed)
+        public IActionResult Withdrawls()
+        {
+            var model = GetCaegoryList("WithDrawls");
+            return View(model);
+        }
+        //private (IQueryable<Culoc>, List<int>) GetCategory(Expression<Func<KeyWord, string>> Catagory)
+        //{
+        //    IQueryable<string> searchingFor = _db.KeyWords.Select(Catagory);
+        //    var result = _db.Culocs.Where(x => x.CrDr == "DR" && !remove.Contains(x.Id) && searchingFor.Any(k => x.Description.IndexOf(k) >= 0)).Select(x => new Culoc { Amount = x.Amount, Id = x.Id });
+        //    return (result, moreAlreadUsed);
+        //}
+        private IQueryable<Culoc> GetCaegoryList(string type)
+        {
+            var searchingFor = _db.Categorys.Where(x => x.KeyWord == type).Select(x => x.Name);
+            var DontGet = _db.Categorys.Where(x => x.KeyWord != type).Select(x => x.Name);
+            var result = _db.Culocs.Where(x => x.CrDr == "DR" && !DontGet.Any(k => x.Description.IndexOf(k) >= 0) && searchingFor.Any(k => x.Description.IndexOf(k) >= 0));
+            return result;
+        }
+
+        private IQueryable<Culoc> GetCategory(string type)
+        {
+            var searchingFor = _db.Categorys.Where(x => x.KeyWord == type).Select(x => x.Name);
+            var DontGet = _db.Categorys.Where(x => x.KeyWord != type && x.KeyWord != "WithDrawls").Select(x => x.Name);
+            var result = _db.Culocs.Where(x => x.CrDr == "DR" && !DontGet.Any(k => x.Description.IndexOf(k) >= 0) && searchingFor.Any(k => x.Description.IndexOf(k) >= 0)).Select(x => new Culoc { Amount = x.Amount, Id = x.Id });
+            return result;
+        }
+
+        private (IQueryable<Culoc>, List<int>) GetCategory(Expression<Func<KeyWord, string>> Catagory, List<int> nAlreadyUsed)
         {
             IQueryable<string> searchingFor = _db.KeyWords.Select(Catagory);
             var remove = nAlreadyUsed;
-            var result = _db.Culocs.Where(x => x.CrDr == "DR" && !remove.Contains(x.Id) && searchingFor.Any(k => x.Description.IndexOf(k) >= 0));
-            nAlreadyUsed = nAlreadyUsed.Concat(result.Select(x => x.Id)).ToHashSet();
-            return (result, nAlreadyUsed);
+            var result = _db.Culocs.Where(x => x.CrDr == "DR" && !remove.Contains(x.Id) && searchingFor.Any(k => x.Description.IndexOf(k) >= 0)).Select(x => new Culoc {Amount = x.Amount, Id = x.Id });
+            var moreAlreadUsed = nAlreadyUsed.Concat(result.Select(x => x.Id)).ToList();
+            return (result, moreAlreadUsed);
         }
 
         private IQueryable<Culoc> GetCategory(Expression<Func<KeyWord, string>> Catagory, HashSet<int> nAlreadyUsed,  out HashSet<int> AlreadyUsed)

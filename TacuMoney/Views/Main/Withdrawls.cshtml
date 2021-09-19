@@ -1,0 +1,25 @@
+﻿@using TacuDataAccess.Models
+
+@model IQueryable<Culoc>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">First</th>
+            <th scope="col">Last</th>
+            <th scope="col">Handle</th>
+        </tr>
+    </thead>
+    <tbody>
+            @foreach(var row in Model)
+            {
+
+        <tr>
+                <td>@row.Description</td>
+                <td>@row.Amount</td>
+                <td>@row.PostedDate</td>
+           </tr>
+            }
+
+    </tbody>
+</table>

@@ -19,6 +19,7 @@ namespace TacuDataAccess
         public virtual DbSet<Cuccloc> Cucclocs { get; set; }
         public virtual DbSet<Culoc> Culocs { get; set; }
         public virtual DbSet<KeyWord> KeyWords { get; set; }
+        public virtual DbSet<Category> Categorys { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -32,6 +33,14 @@ namespace TacuDataAccess
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
+
+            //modelBuilder.Entity<Category>(entity =>
+            //{
+            //    entity.ToTable("Categorys");
+            //    entity.Property(e => e.Name).HasColumnType("text");
+            //    entity.Property(e => e.KeyWord).HasColumnType("text");
+            //});
+
 
             modelBuilder.Entity<Cuccloc>(entity =>
             {
@@ -100,6 +109,8 @@ namespace TacuDataAccess
                     .HasMaxLength(50)
                     .HasColumnName("Serial_Number");
             });
+
+
 
             modelBuilder.Entity<KeyWord>(entity =>
             {

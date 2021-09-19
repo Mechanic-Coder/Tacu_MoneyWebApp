@@ -1,0 +1,68 @@
+﻿@model CategoryModel
+
+
+@{await Html.RenderPartialAsync("Nav/CategoryTab", new TabModel {
+        Action = "Category",
+        Controller = "Query",
+        CurrentPage = Model.Category }); }
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">
+                @{sort("PostedDate", "Posted Date");}
+            </th>
+            <th scope="col">
+                @{sort("Category", "Category");}
+                
+            </th>
+            <th scope="col">
+                @{sort("Description", "Description");}
+                
+            </th>
+            <th scope="col">
+                @{sort("Amount", "Amount");}
+                 
+                
+                <br />
+                @{var amount = Model.Records.Sum(x => x.Amount);}
+                @if (amount != null)
+                {
+                    <span>
+
+                        $@amount?.ToString("#.00")
+                    </span>
+
+                }
+
+            </th>
+        </tr>
+
+        @{
+            void sort(string filterBy, string label)
+            {
+                <a href="@Url.Action("Category", "Query", new {
+                        category = Model.Category,
+                        filterBy = filterBy,
+                        reverse = filterBy == Model.FilterBy ? Model.Reverse : false })">
+                    @label
+                </a>
+            }
+        }
+    </thead>
+    <tbody>
+        @foreach (var r in Model.Records)
+        {
+            <tr>
+                <th scope="row">@r.PostedDate?.ToString("MM/dd/yyyy")</th>
+                <td>
+                    @foreach(var t in r.Category)
+                    {
+                        <a href="@Url.Action("SpecificName", "Query", new {name = t})"> @t</a>
+                    }
+                </td>
+                <td>@r.Description</td>
+                <td>@r.Amount</td>
+            </tr>
+        }
+    </tbody>
+</table>

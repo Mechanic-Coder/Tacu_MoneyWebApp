@@ -1,0 +1,12 @@
+﻿@using TacuDataAccess;
+@inject TacuDataAccess.TacuMoneyContext db;
+@model TabModel
+
+<ul class="nav nav-tabs">
+    @foreach (var cate in db.Categorys.GroupBy(x => x.KeyWord).Select(x => x.Key).OrderBy(x => x))
+    {
+        <li class="nav-item">
+            <a class="nav-link @(Model.CurrentPage == cate? "active": "")" aria-current="page" href="@Url.Action(Model.Action, Model.Controller, new {category =  cate})">@cate</a>
+        </li>
+    }
+</ul>
