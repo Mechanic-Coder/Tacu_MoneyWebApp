@@ -1,31 +1,29 @@
-﻿@model CategoryModel
+﻿@model GroupedCategoryModel
 
-<a class="btn btn-primary" href="@Url.Action("GroupedCategory", "Query", new { category = Model.Category, table = Model.Table})" role="button">Group</a>
+<a class="btn btn-primary" href="@Url.Action("Category", "Query", new { category = Model.Category})" role="button">UnGroup</a>
 @{await Html.RenderPartialAsync("Nav/CategoryTab", Model); }
 <table class="table">
     <thead>
         <tr>
-            <th scope="col">
-                @{sort("PostedDate", "Posted Date", Model);}
-            </th>
+
             <th scope="col">
                 @{sort("Category", "Category", Model);}
-                
+
             </th>
-            <th scope="col">
-                @{sort("Description", "Description", Model);}
-                
-            </th>
+
             <th scope="col" style="width: 200px;">
-                @{var amount = Model.Records.Sum(x => x.Amount);}
-                @if (amount != null)
+                @{var am = Model.Records.Sum(x => x.Sum(y => y.Amount));}
+                @if (am != null)
                 {
                     <span>
-                        <span> Sum: </span>  $@amount?.ToString("#.00")
+                        <span> Sum: </span> $@am?.ToString("#.00")
                     </span>
                     <br />
                 }
                 @{sort("Amount", "Amount", Model);}
+
+
+
             </th>
         </tr>
 
@@ -46,15 +44,12 @@
         @foreach (var r in Model.Records)
         {
             <tr>
-                <th scope="row">@r.PostedDate?.ToString("MM/dd/yyyy")</th>
-                <td>
-                    @foreach(var t in r.Category)
-                    {
-                        <a href="@Url.Action("SpecificName", "Query", new {name = t})"> @t</a>
-                    }
-                </td>
-                <td>@r.Description</td>
-                <td>@r.Amount</td>
+                <th scope="row">@r.Key</th>
+                @{ var amount = r.Sum(x => x.Amount);}
+                @if(amount != null)
+                {
+                    <td>@(String.Format("{0:n}", amount))</td>
+                }
             </tr>
         }
     </tbody>

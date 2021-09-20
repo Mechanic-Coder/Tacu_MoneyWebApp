@@ -7,14 +7,15 @@
             <th scope="col"> Posted Date</th>
             <th scope="col">Description</th>
             <th scope="col">
-                Amount
                 @{var amount = Model.Records.Sum(x => x.Amount);}
                 @if (amount != null)
                 {
                     <span>
-                        $@amount?.ToString("#.00")
+                        <span> Sum: </span> $@amount?.ToString("#.00")
                     </span>
+                    <br />
                 }
+                Amount
             </th>
         </tr>
     </thead>

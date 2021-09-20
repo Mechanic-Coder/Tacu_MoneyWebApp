@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace TacuMoney.Models
 {
-    public class TabModel
+    public class TabModel : BasicNavModel
     {
         public string Controller { get; set; }
         public string Action { get; set; }
-
-        public string CurrentPage { get; set; }
+        public string Table { get; set; }
+        public string Category { get; set; }
     }
 }

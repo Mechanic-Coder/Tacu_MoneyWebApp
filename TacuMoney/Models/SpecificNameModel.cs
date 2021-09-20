@@ -9,5 +9,6 @@ namespace TacuMoney.Models
     {
         public IQueryable<GenericRecordModel> Records { get; set; }
         public string Name { get; set; }
+        public string Table { get; set; }
     }
 }

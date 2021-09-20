@@ -65,5 +65,18 @@ namespace TacuMoney.Controllers
 
             return View(model);
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> ParseCuccLoc()
+        {
+            var table = _db.Cucclocs;
+            foreach(var row in table)
+            {
+                row.AmountNum = row.Amount.MakeDouble();
+            }
+            _db.SaveChanges();
+            return View("index");
+        }
     }
 }

@@ -11,5 +11,6 @@ namespace TacuMoney.Models
         public string Description { get; set; }
         public double? Amount { get; set; }
         public List<string> Category { get; set; }
+        public string FirstCategory { get; set; }
     }
 }

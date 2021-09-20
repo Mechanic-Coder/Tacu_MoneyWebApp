@@ -19,6 +19,7 @@ namespace TacuDataAccess.Models
         public string Description { get; set; }
         public string TransactionType { get; set; }
         public string Amount { get; set; }
+        public decimal? AmountNum { get; set; }
         public string ReferenceNumber { get; set; }
         public string DivertedToAccountLast4 { get; set; }
         public string Column14 { get; set; }

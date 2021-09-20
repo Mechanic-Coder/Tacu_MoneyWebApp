@@ -9,17 +9,8 @@
         {
             Action = "EditCategory",
             Controller = "config",
-            CurrentPage = Model.SelectedCategory
+            Category = Model.SelectedCategory
         }); }
-    @*<ul class="nav nav-tabs">
-            @foreach(var cate in Model.Categorys)
-                {
-
-                    <li class="nav-item">
-                        <a class="nav-link @(Model.SelectedCategory == cate? "active": "")" aria-current="page" href="/config/EditCategory?category=@cate">@cate</a>
-                    </li>
-                }
-        </ul>*@
     <table class="table">
         <thead>
             <tr>

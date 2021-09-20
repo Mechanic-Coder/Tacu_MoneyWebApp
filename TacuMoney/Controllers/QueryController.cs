@@ -21,18 +21,44 @@ namespace TacuMoney.Controllers
             return View();
         }
 
-        public IActionResult Category(string filterBy, bool reverse, string category = "Restruant")
+        public IActionResult Category(string filterBy, bool reverse, string table, string category = "Restaurants")
         {
             var dbCategory = _db.Categorys.Where(x => x.KeyWord == category).Select(x => x.Name);
+            IQueryable<GenericRecordModel> results;
+            switch (table)
+            {
+                case "CuLoc":
+                    results = _db.Culocs.Where(x => dbCategory.Any(c => x.Description.IndexOf(c) >= 0)).Select(x =>
+                       new GenericRecordModel
+                       {
+                           PostedDate = x.PostedDate,
+                           Description = x.Description,
+                           Amount = x.Amount,
+                           Category = dbCategory.Where(c => x.Description.IndexOf(c) >= 0).ToList()
+                       });
+                    break;
+                case "CuccLoc":
+                    results = _db.Cucclocs.Where(x => dbCategory.Any(c => x.MerchantName.IndexOf(c) >= 0)).Select(x =>
+                       new GenericRecordModel
+                       {
+                           PostedDate = x.PostingDate,
+                           Description = x.MerchantName,
+                           Amount = (double)x.AmountNum,
+                           Category = dbCategory.Where(c => x.MerchantName.IndexOf(c) >= 0).ToList()
+                       });
+                    break;
+                default:
+                    results = _db.Culocs.Where(x => dbCategory.Any(c => x.Description.IndexOf(c) >= 0)).Select(x =>
+                       new GenericRecordModel
+                       {
+                           PostedDate = x.PostedDate,
+                           Description = x.Description,
+                           Amount = x.Amount,
+                           Category = dbCategory.Where(c => x.Description.IndexOf(c) >= 0).ToList()
+                       });
+                    break;
 
-            var results = _db.Culocs.Where(x => dbCategory.Any(c => x.Description.IndexOf(c) >= 0)).Select(x =>
-               new GenericRecordModel
-               {
-                   PostedDate = x.PostedDate,
-                   Description = x.Description,
-                   Amount = x.Amount,
-                   Category = dbCategory.Where(c => x.Description.IndexOf(c) >= 0).ToList()
-               });
+            }
             switch (filterBy)
             {
                 case "PostedDate":
@@ -54,13 +80,55 @@ namespace TacuMoney.Controllers
                 Records = results,
                 Category = category,
                 FilterBy = filterBy,
-                Reverse = !reverse
+                Reverse = !reverse,
+                Table = table,
+                Action = "Category",
+                Controller = "Query"
+                
             };
 
             return View(model);
         }
 
-        public IActionResult SpecificName(string name)
+        public IActionResult GroupedCategory(string filterBy, bool reverse, string table, string category = "Restruant")
+        {
+            var dbCategory = _db.Categorys.Where(x => x.KeyWord == category).Select(x => x.Name);
+
+            var results = _db.Culocs.Where(x => dbCategory.Any(c => x.Description.IndexOf(c) >= 0)).Select(x =>
+               new GenericRecordModel
+               {
+                   PostedDate = x.PostedDate,
+                   Description = x.Description,
+                   Amount = x.Amount,
+                   FirstCategory = dbCategory.FirstOrDefault(c => x.Description.IndexOf(c) >= 0)
+               });
+
+            var groupResults = results.AsEnumerable().GroupBy(x => x.FirstCategory);
+            switch (filterBy)
+            {
+                case "Category":
+                    groupResults = reverse ? groupResults.OrderBy(x => x.Key) : groupResults.OrderByDescending(x => x.Key);
+                    break;
+                case "Amount":
+                    groupResults = reverse ? groupResults.OrderBy(x => x.Sum(y => y.Amount)) : groupResults.OrderByDescending(x => x.Sum(y => y.Amount));
+                    break;
+            }
+            
+            var model = new GroupedCategoryModel
+            {
+                Records = groupResults,
+                Category = category,
+                FilterBy = filterBy,
+                Reverse = !reverse,
+                Table = table,
+                Action = "GroupedCategory",
+                Controller = "Query",
+            };
+
+            return View(model);
+        }
+
+        public IActionResult SpecificName(string name, string table)
         {
             var results = _db.Culocs.Where(x =>  x.Description.IndexOf(name) >= 0).Select(x =>
                new GenericRecordModel
@@ -73,7 +141,8 @@ namespace TacuMoney.Controllers
             var Model = new SpecificNameModel
             {
                 Records = results,
-                Name = name
+                Name = name,
+                Table = table
             };
             return View(Model);
         }
