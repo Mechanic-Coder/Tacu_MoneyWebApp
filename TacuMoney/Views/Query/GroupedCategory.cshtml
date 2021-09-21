@@ -1,6 +1,6 @@
 ﻿@model GroupedCategoryModel
 
-<a class="btn btn-primary" href="@Url.Action("Category", "Query", new { category = Model.Category})" role="button">UnGroup</a>
+<a class="btn btn-primary" href="@Url.Action("Category", "Query", new { category = Model.Category, table = Model.Table})" role="button">UnGroup</a>
 @{await Html.RenderPartialAsync("Nav/CategoryTab", Model); }
 <table class="table">
     <thead>

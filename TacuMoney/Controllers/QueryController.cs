@@ -28,34 +28,19 @@ namespace TacuMoney.Controllers
             switch (table)
             {
                 case "CuLoc":
-                    results = _db.Culocs.Where(x => dbCategory.Any(c => x.Description.IndexOf(c) >= 0)).Select(x =>
-                       new GenericRecordModel
-                       {
-                           PostedDate = x.PostedDate,
-                           Description = x.Description,
-                           Amount = x.Amount,
-                           Category = dbCategory.Where(c => x.Description.IndexOf(c) >= 0).ToList()
-                       });
+                    results = _db.Culocs.Where(x => dbCategory.Any(c => x.Description.IndexOf(c) >= 0)).MakeGenericRecord(dbCategory);
                     break;
+
                 case "CuccLoc":
-                    results = _db.Cucclocs.Where(x => dbCategory.Any(c => x.MerchantName.IndexOf(c) >= 0)).Select(x =>
-                       new GenericRecordModel
-                       {
-                           PostedDate = x.PostingDate,
-                           Description = x.MerchantName,
-                           Amount = (double)x.AmountNum,
-                           Category = dbCategory.Where(c => x.MerchantName.IndexOf(c) >= 0).ToList()
-                       });
+                    results = _db.Cucclocs.Where(x => dbCategory.Any(c => x.MerchantName.IndexOf(c) >= 0)).MakeGenericRecord(dbCategory);
                     break;
+
+                case "TaHuntington":
+                    results = _db.TaHuntington.Where(x => dbCategory.Any(c => x.Description.IndexOf(c) >= 0)).MakeGenericRecord(dbCategory);
+                    break;
+
                 default:
-                    results = _db.Culocs.Where(x => dbCategory.Any(c => x.Description.IndexOf(c) >= 0)).Select(x =>
-                       new GenericRecordModel
-                       {
-                           PostedDate = x.PostedDate,
-                           Description = x.Description,
-                           Amount = x.Amount,
-                           Category = dbCategory.Where(c => x.Description.IndexOf(c) >= 0).ToList()
-                       });
+                    results = _db.Culocs.Where(x => dbCategory.Any(c => x.Description.IndexOf(c) >= 0)).MakeGenericRecord(dbCategory);
                     break;
 
             }
@@ -94,14 +79,34 @@ namespace TacuMoney.Controllers
         {
             var dbCategory = _db.Categorys.Where(x => x.KeyWord == category).Select(x => x.Name);
 
-            var results = _db.Culocs.Where(x => dbCategory.Any(c => x.Description.IndexOf(c) >= 0)).Select(x =>
-               new GenericRecordModel
-               {
-                   PostedDate = x.PostedDate,
-                   Description = x.Description,
-                   Amount = x.Amount,
-                   FirstCategory = dbCategory.FirstOrDefault(c => x.Description.IndexOf(c) >= 0)
-               });
+            IQueryable<GenericRecordModel> results;
+            switch (table)
+            {
+                case "CuLoc":
+                    results = _db.Culocs.Where(x => dbCategory.Any(c => x.Description.IndexOf(c) >= 0)).MakeGroupedGenericRecord(dbCategory);
+                    break;
+
+                case "CuccLoc":
+                    results = _db.Cucclocs.Where(x => dbCategory.Any(c => x.MerchantName.IndexOf(c) >= 0)).MakeGroupedGenericRecord(dbCategory);
+                    break;
+
+                case "TaHuntington":
+                    results = _db.TaHuntington.Where(x => dbCategory.Any(c => x.Description.IndexOf(c) >= 0)).MakeGroupedGenericRecord(dbCategory);
+                    break;
+
+                default:
+                    results = _db.Culocs.Where(x => dbCategory.Any(c => x.Description.IndexOf(c) >= 0)).MakeGroupedGenericRecord(dbCategory);
+                    break;
+
+            }
+            //var results = _db.Culocs.Where(x => dbCategory.Any(c => x.Description.IndexOf(c) >= 0)).Select(x =>
+            //   new GenericRecordModel
+            //   {
+            //       PostedDate = x.PostedDate,
+            //       Description = x.Description,
+            //       Amount = x.Amount,
+            //       FirstCategory = dbCategory.FirstOrDefault(c => x.Description.IndexOf(c) >= 0)
+            //   });
 
             var groupResults = results.AsEnumerable().GroupBy(x => x.FirstCategory);
             switch (filterBy)
@@ -130,13 +135,33 @@ namespace TacuMoney.Controllers
 
         public IActionResult SpecificName(string name, string table)
         {
-            var results = _db.Culocs.Where(x =>  x.Description.IndexOf(name) >= 0).Select(x =>
-               new GenericRecordModel
-               {
-                   PostedDate = x.PostedDate,
-                   Description = x.Description,
-                   Amount = x.Amount,
-               });
+            //var results = _db.Culocs.Where(x =>  x.Description.IndexOf(name) >= 0).Select(x =>
+            //   new GenericRecordModel
+            //   {
+            //       PostedDate = x.PostedDate,
+            //       Description = x.Description,
+            //       Amount = x.Amount,
+            //   });
+            IQueryable<GenericRecordModel> results;
+            switch (table)
+            {
+                case "CuLoc":
+                    results = _db.Culocs.Where(x => x.Description.IndexOf(name) >= 0).MakeGenericRecord();
+                    break;
+
+                case "CuccLoc":
+                    results = _db.Cucclocs.Where(x => x.MerchantName.IndexOf(name) >= 0).MakeGenericRecord();
+                    break;
+
+                case "TaHuntington":
+                    results = _db.TaHuntington.Where(x => x.Description.IndexOf(name) >= 0).MakeGenericRecord();
+                    break;
+
+                default:
+                    results = _db.Culocs.Where(x => x.Description.IndexOf(name) >= 0).MakeGenericRecord();
+                    break;
+
+            }
 
             var Model = new SpecificNameModel
             {

@@ -20,6 +20,8 @@ namespace TacuDataAccess
         public virtual DbSet<Culoc> Culocs { get; set; }
         public virtual DbSet<KeyWord> KeyWords { get; set; }
         public virtual DbSet<Category> Categorys { get; set; }
+        public virtual DbSet<TaHuntington> TaHuntington { get; set; }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

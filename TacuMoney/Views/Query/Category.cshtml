@@ -50,7 +50,7 @@
                 <td>
                     @foreach(var t in r.Category)
                     {
-                        <a href="@Url.Action("SpecificName", "Query", new {name = t})"> @t</a>
+                        <a href="@Url.Action("SpecificName", "Query", new {name = t, table = Model.Table})"> @t</a>
                     }
                 </td>
                 <td>@r.Description</td>

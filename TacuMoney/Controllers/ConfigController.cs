@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TacuDataAccess;
 using TacuDataAccess.Models;
 using TacuMoney.Models;
+using System.IO;
 
 namespace TacuMoney.Controllers
 {
@@ -78,5 +79,40 @@ namespace TacuMoney.Controllers
             _db.SaveChanges();
             return View("index");
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> ParseCSV()
+        {
+            var readcsv = System.IO.File.ReadAllText("C:/Users/curti/OneDrive/Documents/TaCu_Money/Interfaces/Tacu_MoneyWebApp/TacuMoney/TestFiles/TaHuntington.txt");
+            string[] csvfilerecord = readcsv.Split('\n');
+            var lis = new List<TaHuntington>();
+            foreach (var row in csvfilerecord.Skip(1))
+            {
+                if (!string.IsNullOrEmpty(row))
+                {
+                    var cells = row.Split(',');
+                    lis.Add(new TaHuntington
+                    {
+                        Date = DateTime.Parse(cells[1]),
+                        Reference_Number = cells[2],
+                        Description = cells[3],
+                        Memo = cells[4],
+                        Amount = Decimal.Parse(cells[5]),
+
+                    });
+                    
+    
+                }
+            }
+
+            _db.TaHuntington.AddRange(lis);
+
+            _db.SaveChanges();
+
+            return View("index");
+        }
+
+
     }
 }
