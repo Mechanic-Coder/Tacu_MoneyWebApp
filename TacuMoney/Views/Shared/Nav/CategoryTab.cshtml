@@ -6,10 +6,10 @@
     @foreach (var cate in db.Categorys.GroupBy(x => x.KeyWord).Select(x => x.Key).OrderBy(x => x))
     {
         <li class="nav-item">
-            <a class="nav-link @(Model.Category == cate? "active": "")" 
+            <a class="nav-link @(Model.Category == cate? "active": "")"
                href="@Url.Action(
-                Model.Action, 
-                Model.Controller, 
+                Model.Action,
+                Model.Controller,
                 new {
                     category =  cate,
                     table = Model.Table})">
@@ -17,4 +17,15 @@
             </a>
         </li>
     }
+    <li class="nav-item">
+        <a class="nav-link @(Model.Category == "theRest"? "active": "")"
+           href="@Url.Action(
+                Model.Action,
+                Model.Controller,
+                new {
+                    category =  "theRest",
+                    table = Model.Table})">
+            the Rest
+        </a>
+    </li>
 </ul>

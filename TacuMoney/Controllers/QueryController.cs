@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using TacuDataAccess;
+using TacuDataAccess.Models;
 using TacuMoney.Models;
 
 namespace TacuMoney.Controllers
@@ -23,24 +24,66 @@ namespace TacuMoney.Controllers
 
         public IActionResult Category(string filterBy, bool reverse, string table, string category = "Restaurants")
         {
-            var dbCategory = _db.Categorys.Where(x => x.KeyWord == category).Select(x => x.Name);
+            IQueryable<string> dbCategory;
+            if (category == "theRest")
+            {
+                dbCategory = _db.Categorys.Select(x => x.Name);
+            } else
+            {
+                dbCategory = _db.Categorys.Where(x => x.KeyWord == category).Select(x => x.Name);
+            }
             IQueryable<GenericRecordModel> results;
+
             switch (table)
             {
                 case "CuLoc":
-                    results = _db.Culocs.Where(x => dbCategory.Any(c => x.Description.IndexOf(c) >= 0)).MakeGenericRecord(dbCategory);
+                    Expression<Func<Culoc, bool>> culoc;
+                    if (category == "theRest")
+                    {
+                        culoc = x => dbCategory.All(c => x.Description.IndexOf(c) == -1);
+                    } else
+                    {
+                        culoc = x => dbCategory.Any(c => x.Description.IndexOf(c) >= 0);
+                    }
+                    results = _db.Culocs.Where(culoc).MakeGenericRecord(dbCategory);
                     break;
 
                 case "CuccLoc":
-                    results = _db.Cucclocs.Where(x => dbCategory.Any(c => x.MerchantName.IndexOf(c) >= 0)).MakeGenericRecord(dbCategory);
+                    Expression<Func<Cuccloc, bool>> cuccloc;
+                    if (category == "theRest")
+                    {
+                        cuccloc = x => dbCategory.All(c => x.MerchantName.IndexOf(c) == -1);
+                    }
+                    else
+                    {
+                        cuccloc = x => dbCategory.Any(c => x.MerchantName.IndexOf(c) >= 0);
+                    }
+                    results = _db.Cucclocs.Where(cuccloc).MakeGenericRecord(dbCategory);
                     break;
 
                 case "TaHuntington":
-                    results = _db.TaHuntington.Where(x => dbCategory.Any(c => x.Description.IndexOf(c) >= 0)).MakeGenericRecord(dbCategory);
+                    Expression<Func<TaHuntington, bool>> taHuntington;
+                    if (category == "theRest")
+                    {
+                        taHuntington = x => dbCategory.All(c => x.Description.IndexOf(c) == -1);
+                    }
+                    else
+                    {
+                        taHuntington = x => dbCategory.Any(c => x.Description.IndexOf(c) >= 0);
+                    }
+                    results = _db.TaHuntington.Where(taHuntington).MakeGenericRecord(dbCategory);
                     break;
 
                 default:
-                    results = _db.Culocs.Where(x => dbCategory.Any(c => x.Description.IndexOf(c) >= 0)).MakeGenericRecord(dbCategory);
+                    if (category == "theRest")
+                    {
+                        culoc = x => dbCategory.All(c => x.Description.IndexOf(c) == -1);
+                    }
+                    else
+                    {
+                        culoc = x => dbCategory.Any(c => x.Description.IndexOf(c) >= 0);
+                    }
+                    results = _db.Culocs.Where(culoc).MakeGenericRecord(dbCategory);
                     break;
 
             }
