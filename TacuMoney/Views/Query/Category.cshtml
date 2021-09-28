@@ -1,22 +1,40 @@
 ﻿@model CategoryModel
 
 <a class="btn btn-primary" href="@Url.Action("GroupedCategory", "Query", new { category = Model.Category, table = Model.Table})" role="button">Group</a>
+@*<a class="btn btn-primary" href="@Url.Action("Category", "Query", new { category = Model.Category, table = Model.Table, hideHidde})" role="button">Group</a>*@
+<a class="btn btn-primary" href="@Url.Action("Category", "Query", new { category = Model.Category, table = Model.Table, hideHidden = ! Model.HideHidden})" role="button">@(Model.HideHidden? "UnHide": "Hide")</a>
 @{await Html.RenderPartialAsync("Nav/CategoryTab", Model); }
 <table class="table">
     <thead>
+        <form>
+            <input name="category" type="hidden" value="@Model.Category" />
+            <input name="reverse" type="hidden" value="@((Model.Reverse).ToString())" />
+            <input name="table" type="hidden" value="@Model.Table" />
+            <input name="" type="hidden" value="" />
         <tr>
             <th scope="col">
                 @{sort("PostedDate", "Posted Date", Model);}
+                <div>
+
+                    <label> Start Date</label>
+                    <input type="date" name="StartDate" value="@Model.StartDate?.ToString("yyyy-MM-dd")" />
+                </div>
+                <div>
+
+                    <label> End Date</label>
+                    <input type="date" name="EndDate" value="@Model.EndDate?.ToString("yyyy-MM-dd")" />
+                </div>
             </th>
             <th scope="col">
                 @{sort("Category", "Category", Model);}
-                
+
             </th>
             <th scope="col">
                 @{sort("Description", "Description", Model);}
-                
+
             </th>
             <th scope="col" style="width: 200px;">
+                <button type="submit" formaction="@Url.Action(Model.Action, Model.Controller)"> Search</button>
                 @{var amount = Model.Records.Sum(x => x.Amount);}
                 @if (amount != null)
                 {
@@ -26,34 +44,49 @@
                     <br />
                 }
                 @{sort("Amount", "Amount", Model);}
+
             </th>
         </tr>
+        </form>
 
         @{
             void sort(string filterBy, string label, NavModel nav)
             {
-                <a href="@Url.Action(nav.Action, nav.Controller, new {
+                <button type="submit" name="filterBy" value="@filterBy"
+                        formaction="@Url.Action(nav.Action, nav.Controller)">
+                    @label
+                </button>
+                @*<button type="submit" name="reverse" value="@((filterBy == Model.FilterBy ? Model.Reverse! : true).ToString().ToLower())"*@
+                        @*<a href="@Url.Action(nav.Action, nav.Controller, new {
                         category = nav.Category,
                         filterBy = filterBy,
                         reverse = filterBy == Model.FilterBy ? Model.Reverse : false,
                         table = nav.Table})">
                     @label
-                </a>
-            }
-        }
-    </thead>
+                </a>*@
+                        }
+                        }
+            </thead>
     <tbody>
         @foreach (var r in Model.Records)
         {
             <tr>
                 <th scope="row">@r.PostedDate?.ToString("MM/dd/yyyy")</th>
                 <td>
-                    @foreach(var t in r.Category)
+                    @foreach (var t in r.Category)
                     {
-                        <a href="@Url.Action("SpecificName", "Query", new {name = t, table = Model.Table})"> @t</a>
+                        <a href="@Url.Action("SpecificName", "Query", new { name = t, table = Model.Table })"> @t</a>
                     }
                 </td>
-                <td>@r.Description</td>
+                @*<td>@r.Description</td>*@
+            <td>
+                @{var words = r.Description.Split(" ");
+                    foreach (var word in words)
+                    {
+                        <a href="@Url.Action("SpecificName", "Query", new { name = word, table = Model.Table })"> @word</a>
+                    }
+                }
+            </td>
                 <td>@r.Amount</td>
             </tr>
         }

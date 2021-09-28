@@ -12,6 +12,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using AgileObjects.ReadableExpressions;
 
+
 namespace TacuMoney.Controllers
 {
     public class MainController : Controller
@@ -29,41 +30,7 @@ namespace TacuMoney.Controllers
             return View(test);
         }
 
-        //only for creating tables
-        //public IActionResult MigrateToTable()
-        //{
-        //    //var test = _db.SingularKeyWords.ToList();
 
-        //    //var newDat = new Category
-        //    //{
-        //    //    Name = "Krogers",
-        //    //    KeyWord = KeyWordEnum.Grocerys
-        //    //};
-        //    var AddTo = _db.KeyWords.Select(x => new Category { Name = x.Restruant, KeyWord = "Restruant" }).ToList();
-
-        //    AddTo.AddRange(_db.KeyWords.Where(x => x.Restruant != null).Select(x => new Category { Name = x.Restruant, KeyWord= "Restruant"}).ToList());
-
-        //    AddTo.AddRange(_db.KeyWords.Where(x => x.Gas != null).Select(x => new Category { Name = x.Gas, KeyWord = "Gas"}).ToList());
-
-        //    AddTo.AddRange(_db.KeyWords.Where(x => x.StudentLoans != null).Select(x => new Category { Name = x.StudentLoans, KeyWord = "StudentLoans"}).ToList());
-        //    AddTo.AddRange(_db.KeyWords.Where(x => x.Automotive != null).Select(x => new Category { Name = x.Automotive, KeyWord = "Automotive"}).ToList());
-        //    AddTo.AddRange(_db.KeyWords.Where(x => x.Amazon != null).Select(x => new Category { Name = x.Amazon, KeyWord = "Amazon"}).ToList());
-        //    AddTo.AddRange(_db.KeyWords.Where(x => x.Grocerys != null).Select(x => new Category { Name = x.Grocerys, KeyWord = "Grocerys"}).ToList());
-        //    AddTo.AddRange(_db.KeyWords.Where(x => x.UtilitiesRent != null).Select(x => new Category { Name = x.UtilitiesRent, KeyWord = "UtilitiesRent"}).ToList());
-        //    AddTo.AddRange(_db.KeyWords.Where(x => x.WithDrawls != null).Select(x => new Category { Name = x.WithDrawls, KeyWord = "WithDrawls"}).ToList());
-        //    AddTo.AddRange(_db.KeyWords.Where(x => x.Merchandise != null).Select(x => new Category { Name = x.Merchandise, KeyWord = "Merchandise"}).ToList());
-        //    AddTo.AddRange(_db.KeyWords.Where(x => x.BadHabit != null).Select(x => new Category { Name = x.BadHabit, KeyWord = "BadHabit"}).ToList());
-        //    AddTo.AddRange(_db.KeyWords.Where(x => x.Fun != null).Select(x => new Category { Name = x.Fun, KeyWord = "Fun"}).ToList());
-
-
-
-        //    _db.Categorys.AddRange(AddTo);
-        //    _db.SaveChanges();
-
-
-
-        //    return RedirectToAction("Index");
-        //}
         public IActionResult Raw()
         {
             var test = (DbSet<TestModel>)_db.Culocs.FromSqlRaw(@"select Distinct[TacuMoney].[dbo].[CULoc].Id, 

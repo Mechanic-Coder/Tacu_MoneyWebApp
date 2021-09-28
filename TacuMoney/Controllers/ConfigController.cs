@@ -7,6 +7,7 @@ using TacuDataAccess;
 using TacuDataAccess.Models;
 using TacuMoney.Models;
 using System.IO;
+using Microsoft.AspNetCore.Http;
 
 namespace TacuMoney.Controllers
 {
@@ -21,21 +22,136 @@ namespace TacuMoney.Controllers
         {
             return View();
         }
-
         [HttpPost]
-        public async Task<IActionResult> EditCategory(string category, List<string> name)
+        public IActionResult UploadCSV(IFormFile file, AccountEnum account)
         {
-            var oldCategorys = _db.Categorys.OrderBy(x => x.Name).Where(x => x.KeyWord == category);
+            if (file == null) return Redirect("index");
+            if (file.FileName.EndsWith(".csv") || file.FileName.EndsWith(".CSV"))
+            {
+                using (var sreader = new StreamReader(file.OpenReadStream()))
+                {
+                    string[] headers = sreader.ReadLine().Split(',');     //Title
+                    while (!sreader.EndOfStream)                          //get all the content in rows 
+                    {
+                        switch (account)
+                        {
+                            case AccountEnum.CurtisLoc:
+                                AddToCuLoc(sreader);
+                                break;
+                            case AccountEnum.CurtisLocCC:
+                                AddToCuLocCC(sreader);
+                                break;
+                            case AccountEnum.TammyHuntington:
+                                break;
+                            default:
+                                break;
+                        }
+
+                        if (account == AccountEnum.CurtisLoc)
+                        {
+                            AddToCuLoc(sreader);
+                        }
+                    }
+
+                    _db.SaveChanges();
+                }
+            }
+
+            void AddToCuLocCC(StreamReader reader)
+            {
+                var record = new Cuccloc();
+                string[] rows = reader.ReadLine().Split(',');
+                record.OriginatingAccountNumber = rows[0].ToString();
+                record.PostingDate = DateTime.Parse(rows[1].ToString());
+                record.TransDate = DateTime.Parse(rows[2].ToString());
+                record.Type = rows[3].ToString();
+                record.Category = rows[4].ToString();
+                record.MerchantName = rows[5].ToString();
+                record.MerchantCity = rows[6].ToString();
+                record.MerchantState = rows[7].ToString();
+                record.Description = rows[8].ToString();
+                record.TransactionType = rows[9].ToString();
+                var amount = rows[10].ToString().Replace("\"","");
+                record.Amount = amount;
+                //record.AmountNum = rows[10].ToString().MakeDouble();
+                record.ReferenceNumber = rows[11].ToString();
+
+                _db.Cucclocs.Add(record);
+            }
+
+            void AddToCuLoc(StreamReader reader)
+            {
+                var record = new Culoc();
+                string[] rows = reader.ReadLine().Split(',');
+                record.PostedDate = DateTime.Parse(rows[1].ToString());
+                record.Description = rows[3].ToString();
+                record.Amount = Double.Parse(rows[4].ToString());
+                record.CrDr = rows[5].ToString();
+                _db.Culocs.Add(record);
+            }
+
+            return Redirect("index");
+            
+        }
+
+
+        //this will be obsolete
+        [HttpPost]
+        public async Task<IActionResult> EditCategory(EditCategoryInputModel input)
+        {
+            var oldCategorys = _db.Categorys.OrderBy(x => x.Name).Where(x => x.KeyWord == input.Category);
             _db.Categorys.RemoveRange(oldCategorys);
 
-            var newCategorys = name.Where(x => x != null).Select(x => new Category { KeyWord = category, Name = x });
+            var newCategorys = input.Names.Where(x => x != null).Select(x => new Category { KeyWord = input.Category, Name = x.Name, Hidden = x.Hidden });
 
             _db.Categorys.AddRange(newCategorys);
 
-
             _db.SaveChanges();
 
-            return RedirectToAction("EditCategory", new {category = category });
+            return RedirectToAction("EditCategory", new {category = input.Category });
+        }
+        [HttpPost]
+        public string DeleteCategoryName(int id)
+        {
+            if(id != 0) {
+                var row = _db.Categorys.Single(x => x.Id == id);
+                _db.Categorys.Remove(row);
+                _db.SaveChanges();
+            }
+            return "Success";
+        }
+
+        [HttpPost]
+        public string HideCategoryName(int id, bool hide)
+        {
+            if (id != 0)
+            {
+                var row = _db.Categorys.Single(x => x.Id == id);
+                row.Hidden = hide;
+                _db.SaveChanges();
+            }
+            return "Success";
+        }
+
+        [HttpPost]
+        public string EditCategoryName(string name, int? id, string category)
+        {
+            Category item;
+            if(id == null)
+            {
+                item = new Category();
+                item.Hidden = false;
+                item.KeyWord = category;
+                _db.Categorys.Add(item);
+            } else
+            {
+                item = _db.Categorys.Single(x => x.Id == id);
+            }
+
+            item.Name = name;
+            _db.SaveChanges();
+
+            return item.Id.ToString();
         }
 
         [HttpPost]
@@ -66,53 +182,5 @@ namespace TacuMoney.Controllers
 
             return View(model);
         }
-
-
-        [HttpGet]
-        public async Task<IActionResult> ParseCuccLoc()
-        {
-            var table = _db.Cucclocs;
-            foreach(var row in table)
-            {
-                row.AmountNum = row.Amount.MakeDouble();
-            }
-            _db.SaveChanges();
-            return View("index");
-        }
-
-
-        [HttpGet]
-        public async Task<IActionResult> ParseCSV()
-        {
-            var readcsv = System.IO.File.ReadAllText("C:/Users/curti/OneDrive/Documents/TaCu_Money/Interfaces/Tacu_MoneyWebApp/TacuMoney/TestFiles/TaHuntington.txt");
-            string[] csvfilerecord = readcsv.Split('\n');
-            var lis = new List<TaHuntington>();
-            foreach (var row in csvfilerecord.Skip(1))
-            {
-                if (!string.IsNullOrEmpty(row))
-                {
-                    var cells = row.Split(',');
-                    lis.Add(new TaHuntington
-                    {
-                        Date = DateTime.Parse(cells[1]),
-                        Reference_Number = cells[2],
-                        Description = cells[3],
-                        Memo = cells[4],
-                        Amount = Decimal.Parse(cells[5]),
-
-                    });
-                    
-    
-                }
-            }
-
-            _db.TaHuntington.AddRange(lis);
-
-            _db.SaveChanges();
-
-            return View("index");
-        }
-
-
     }
 }

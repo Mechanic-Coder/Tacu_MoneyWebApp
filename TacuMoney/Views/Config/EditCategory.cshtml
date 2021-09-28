@@ -1,6 +1,6 @@
 ﻿@using TacuDataAccess.Models
 @model ManageCategorys
-<form method="post" action="/Config/EditCategory">
+<form  data-category="@Model.SelectedCategory">
     <input type="hidden" name="category" value="@Model.SelectedCategory" />
 
 
@@ -18,20 +18,40 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var t in Model.Terms)
+            <tr>
+                <td><input name="Names[@Model.Terms.Count()].name" /> <button type="button" id="add" class="btn btn-primary"> Add </button> </td>
+            </tr>
+            @foreach (var t in Model.Terms.AsEnumerable().Select((val, i) => new { val, i }))
             {
                 <tr>
-                    <td><input name="name" value="@t.Name" /> <button type="button" data-role="delete"> delete</button></td>
+                    <td>
+                        <input data-role="name" name="Names[@t.i].name" data-id="@t.val.Id" value="@t.val.Name" />
+                        <button type="button" data-role="delete"> delete</button>
+                        <div class="form-check">
+                            <input data-role="hide" class="form-check-input" name="Names[@t.i].hidden" type="checkbox" checked="@t.val.Hidden" value="@t.val.Hidden.ToString().ToLower()">
+                            <label class="form-check-label" for="flexCheckDefault">
+                                Hide
+                            </label>
+                        </div>
+                    </td>
                 </tr>
             }
-            <tr>
-                <td><input name="name" /> <button type="button" id="add" class="btn "> Add </button> </td>
+            <tr style="display: none">
+                <td>
+                    <input data-role="name" data-id="" value="" />
+                    <button type="button" data-role="delete"> delete</button>
+                    <div class="form-check">
+                        <input data-role="hide" class="form-check-input" type="checkbox" value="">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            Hide
+                        </label>
+                    </div>
+                </td>
             </tr>
         </tbody>
         <tfoot>
         </tfoot>
     </table>
-    <button type="submit"> Save</button>
 
 
 </form>
@@ -45,17 +65,113 @@
             var $target = $(e.target)
             var parentTr = $target.closest("tr")
             var input = parentTr.find("input").first()
-            $(`<tr><td><input name="Name" value="${input.val()}" /> <button type="button" data-role="delete"> delete</button></td></tr>`).insertBefore(parentTr)
-            input.val("")
+            var formData = new FormData();
+            var category = $target.closest("form").first().attr("data-category")
+            if (input.val() == "") return;
+            formData.append("id", null);
+            formData.append("name", input.val());
+            formData.append("category", category);
+
+            $.ajax({
+                url: "@Url.Action(nameof(ConfigController.EditCategoryName))",
+
+                data: formData,
+                processData: false,
+                contentType: false,
+                type: "Post",
+                success: function (data) {
+                    console.log(data)
+                    var row = $("tbody tr").last().clone().show()
+                    var nameInput = row.find(`input[data-role="name"]`)
+                    nameInput.val(input.val())
+                    nameInput.attr("data-id", data)
+                    console.log(row)
+                    input.val("")
+                    $("tbody").append(row)
+                }
+            })
         })
 
         $("tbody").click((e) => {
+
             var $target = $(e.target)
-            var parentTr = $target.closest("tr")
-            if($target.attr("data-role") == "delete") {
+            var $input = $target.closest("td").find("input").first()
+
+            var id = $input.attr("data-id")
+            if ($target.attr("data-role") == "delete") {
+                var parentTr = $target.closest("tr")
+                ajaxDelete(id)
                 parentTr.remove()
+            } else if ($target.attr("data-role") == "hide") {
+                var hide = $target.prop("checked")
+                $target.val(hide)
+                ajaxHide(id, hide)
             }
         })
+
+        $("tbody").change((e) => {
+            var $target = $(e.target)
+            if ($target.attr("data-role") == "name") {
+                var id = $target.attr("data-id")
+                var name = $target.val()
+                var category = $target.closest("form").first().attr("data-category")
+
+                console.log(id)
+                console.log(name)
+                var formData = new FormData();
+
+                formData.append("id", id);
+                formData.append("name", name);
+                formData.append("category", category);
+
+                $.ajax({
+                    url: "@Url.Action(nameof(ConfigController.EditCategoryName))",
+
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    type: "Post",
+                    success: function (data) {
+
+                    }
+                })
+            }
+        })
+
+        function ajaxDelete(id) {
+            var formData = new FormData();
+
+            formData.append("id", id);
+                        $.ajax({
+                url: "@Url.Action(nameof(ConfigController.DeleteCategoryName))",
+
+                data: formData,
+                processData: false,
+                contentType: false,
+                type: "Post",
+                success: function (data) {
+
+                }
+            })
+        }
+
+        function ajaxHide(id, hide) {
+            var formData = new FormData();
+
+            formData.append("id", id);
+            formData.append("hide", hide);
+                        $.ajax({
+                url: "@Url.Action(nameof(ConfigController.HideCategoryName))",
+
+                data: formData,
+                processData: false,
+                contentType: false,
+                type: "Post",
+                success: function (data) {
+
+                }
+            })
+        }
     })
     </script>
  }

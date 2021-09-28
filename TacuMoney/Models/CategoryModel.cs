@@ -15,6 +15,9 @@ namespace TacuMoney.Models
         public string Action { get; set; }
         public string Controller { get; set; }
         public string CurrentPage { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public bool HideHidden { get; set; }
     }
 
 }

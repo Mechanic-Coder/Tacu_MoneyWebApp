@@ -22,23 +22,39 @@ namespace TacuMoney.Controllers
             return View();
         }
 
-        public IActionResult Category(string filterBy, bool reverse, string table, string category = "Restaurants")
+        //public IActionResult Category(string filterBy, bool hideHidden, bool reverse, string table, string category = "Restaurants")
+        public IActionResult Category(CategoryModel input)
         {
-            IQueryable<string> dbCategory;
-            if (category == "theRest")
+            IQueryable<Category> filtersCategory;
+            if (input.HideHidden)
             {
-                dbCategory = _db.Categorys.Select(x => x.Name);
+                filtersCategory = _db.Categorys.Where(x => x.Hidden != true);
             } else
             {
-                dbCategory = _db.Categorys.Where(x => x.KeyWord == category).Select(x => x.Name);
+                filtersCategory = _db.Categorys;
+
             }
+            if(input.Category == null)
+            {
+                input.Category = "Restruant";
+            }
+            IQueryable<string> dbCategory;
+            if (input.Category == "theRest")
+            {
+                dbCategory = filtersCategory.Where(x => x.Hidden == false).Select(x => x.Name);
+            } else
+            {
+                dbCategory = filtersCategory.Where(x => x.KeyWord == input.Category).Select(x => x.Name);
+            }
+
+
             IQueryable<GenericRecordModel> results;
 
-            switch (table)
+            switch (input.Table)
             {
                 case "CuLoc":
                     Expression<Func<Culoc, bool>> culoc;
-                    if (category == "theRest")
+                    if (input.Category == "theRest")
                     {
                         culoc = x => dbCategory.All(c => x.Description.IndexOf(c) == -1);
                     } else
@@ -50,7 +66,7 @@ namespace TacuMoney.Controllers
 
                 case "CuccLoc":
                     Expression<Func<Cuccloc, bool>> cuccloc;
-                    if (category == "theRest")
+                    if (input.Category == "theRest")
                     {
                         cuccloc = x => dbCategory.All(c => x.MerchantName.IndexOf(c) == -1);
                     }
@@ -63,7 +79,7 @@ namespace TacuMoney.Controllers
 
                 case "TaHuntington":
                     Expression<Func<TaHuntington, bool>> taHuntington;
-                    if (category == "theRest")
+                    if (input.Category == "theRest")
                     {
                         taHuntington = x => dbCategory.All(c => x.Description.IndexOf(c) == -1);
                     }
@@ -75,7 +91,7 @@ namespace TacuMoney.Controllers
                     break;
 
                 default:
-                    if (category == "theRest")
+                    if (input.Category == "theRest")
                     {
                         culoc = x => dbCategory.All(c => x.Description.IndexOf(c) == -1);
                     }
@@ -87,35 +103,49 @@ namespace TacuMoney.Controllers
                     break;
 
             }
-            switch (filterBy)
+            switch (input.FilterBy)
             {
                 case "PostedDate":
-                    results = reverse ? results.OrderBy(x => x.PostedDate): results.OrderByDescending(x => x.PostedDate);
+                    results = input.Reverse ? results.OrderBy(x => x.PostedDate): results.OrderByDescending(x => x.PostedDate);
                     break;
                 case "Category":
-                    results = reverse ? results.OrderBy(x => x.Category.OrderBy(c => c).FirstOrDefault()): results.OrderByDescending(x => x.Category.OrderBy(c => c).LastOrDefault());
+                    results = input.Reverse ? results.OrderBy(x => x.Category.OrderBy(c => c).FirstOrDefault()): results.OrderByDescending(x => x.Category.OrderBy(c => c).LastOrDefault());
                     break;
                 case "Description":
-                    results = reverse ? results.OrderBy(x => x.Description): results.OrderByDescending(x => x.Description);
+                    results = input.Reverse ? results.OrderBy(x => x.Description): results.OrderByDescending(x => x.Description);
                     break;
                 case "Amount":
-                    results = reverse ? results.OrderBy(x => x.Amount) : results.OrderByDescending(x => x.Amount);
+                    results = input.Reverse ? results.OrderBy(x => x.Amount) : results.OrderByDescending(x => x.Amount);
                     break;
             }
 
-            var model = new CategoryModel
+            if(input.StartDate != null)
             {
-                Records = results,
-                Category = category,
-                FilterBy = filterBy,
-                Reverse = !reverse,
-                Table = table,
-                Action = "Category",
-                Controller = "Query"
-                
-            };
+                results = results.Where(x => x.PostedDate >= input.StartDate);
+            }
+            if (input.EndDate != null)
+            {
+                input.EndDate = input.EndDate?.AddHours(23.9);
+                results = results.Where(x => x.PostedDate <= input.EndDate);
+            }
 
-            return View(model);
+            input.Records = results;
+            input.Reverse = !input.Reverse;
+            input.Action = "Category";
+            input.Controller = "Query";
+            //var model = new CategoryModel
+            //{
+            //    Records = results,
+            //    Category = category,
+            //    FilterBy = filterBy,
+            //    Reverse = !reverse,
+            //    Table = table,
+            //    Action = "Category",
+            //    Controller = "Query"
+                
+            //};
+
+            return View(input);
         }
 
         public IActionResult GroupedCategory(string filterBy, bool reverse, string table, string category = "Restruant")

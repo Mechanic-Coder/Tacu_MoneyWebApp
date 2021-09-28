@@ -11,6 +11,9 @@
         <li>
             <a href="#" data-bs-toggle="modal" data-bs-target="#AddCategoryModal"> Add Category</a>
         </li>
+        <li>
+            <a href="#" data-bs-toggle="modal" data-bs-target="#UploadCsv"> Upload CSV</a>
+        </li>
     </ul>
 </div>
 
@@ -18,7 +21,7 @@
 @section Modals{
 
 
-    <form class="modal" tabindex="-1" id="AddCategoryModal" method="post" action="/Config/AddCategory">
+    <form class="modal" tabindex="-1" id="AddCategoryModal" method="post" action="/Config/AddCategory" >
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -27,8 +30,8 @@
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label  class="form-label">New Category</label>
-                        <input type="text" class="form-control" name="newCategory" >
+                        <label class="form-label">New Category</label>
+                        <input type="text" class="form-control" name="newCategory">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -38,4 +41,30 @@
             </div>
         </div>
     </form>
- }
+    <form class="modal" tabindex="-1" id="UploadCsv" method="post" action="/Config/UploadCSV" enctype="multipart/form-data">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">CSV</label>
+                        <input type="file" accept=".csv" class="form-control" name="file">
+                    </div>
+                    <select name="account" class="form-select form-select-lg mb-3">
+                        <option selected>Open this select menu</option>
+                        <option value="0">Curtis Loc</option>
+                        <option value="1">Curtis Loc CC</option>
+                        <option value="2">Tammy Huntington</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </form>
+}
