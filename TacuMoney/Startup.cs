@@ -1,16 +1,15 @@
+using AccountingDB;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using TacuDataAccess;
+
 
 namespace TacuMoney
 {
@@ -28,7 +27,14 @@ namespace TacuMoney
         {
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddControllersWithViews();
-            services.AddDbContext<TacuMoneyContext>(options => options.LogTo(x => Debug.WriteLine(x), LogLevel.Information));
+            //services.AddDbContext<TacuMoneyContext>(options => 
+            //    options.LogTo(x => Debug.WriteLine(x), LogLevel.Information));
+            
+            services.AddDbContext<AccountingContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("AccountingDB"))
+                .LogTo(x => Debug.WriteLine(x), LogLevel.Information));
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 
 

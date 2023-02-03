@@ -1,11 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31112.23
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TacuMoney", "TacuMoney\TacuMoney.csproj", "{B3CE4338-CEDB-413C-8106-51AB167538A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TacuMoney", "TacuMoney\TacuMoney.csproj", "{B3CE4338-CEDB-413C-8106-51AB167538A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TacuDataAccess", "TacuDataAccess\TacuDataAccess.csproj", "{5892F712-CDD7-46D3-BF55-D168586BA03E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TacuDataAccess", "TacuDataAccess\TacuDataAccess.csproj", "{5892F712-CDD7-46D3-BF55-D168586BA03E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountingDB", "AccountingDB\AccountingDB.csproj", "{005097F2-30C0-41F2-8D53-1B716856C375}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaCuTools", "TaCuTools\TaCuTools.csproj", "{0AD7FF49-35DE-4ABC-B626-64E83B0ACF42}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{5892F712-CDD7-46D3-BF55-D168586BA03E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5892F712-CDD7-46D3-BF55-D168586BA03E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5892F712-CDD7-46D3-BF55-D168586BA03E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{005097F2-30C0-41F2-8D53-1B716856C375}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{005097F2-30C0-41F2-8D53-1B716856C375}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{005097F2-30C0-41F2-8D53-1B716856C375}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{005097F2-30C0-41F2-8D53-1B716856C375}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0AD7FF49-35DE-4ABC-B626-64E83B0ACF42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AD7FF49-35DE-4ABC-B626-64E83B0ACF42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0AD7FF49-35DE-4ABC-B626-64E83B0ACF42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AD7FF49-35DE-4ABC-B626-64E83B0ACF42}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
