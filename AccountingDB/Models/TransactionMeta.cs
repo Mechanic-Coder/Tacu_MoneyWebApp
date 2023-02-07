@@ -27,6 +27,9 @@ namespace AccountingDB.Models
         Category = 2,
         Note = 3, 
         Tag = 4,
-        ExtDescription = 5
+        ExtDescription = 5,
+        Memo = 6,
+        Type = 7,
+        CheckNumber = 8
     }
 }

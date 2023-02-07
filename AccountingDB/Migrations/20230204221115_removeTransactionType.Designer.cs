@@ -4,6 +4,7 @@ using AccountingDB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AccountingDB.Migrations
 {
     [DbContext(typeof(AccountingContext))]
-    partial class AccountingContextModelSnapshot : ModelSnapshot
+    [Migration("20230204221115_removeTransactionType")]
+    partial class removeTransactionType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,7 +38,7 @@ namespace AccountingDB.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Accounts", (string)null);
+                    b.ToTable("Accounts");
                 });
 
             modelBuilder.Entity("AccountingDB.Models.AccountUser", b =>
@@ -50,47 +53,7 @@ namespace AccountingDB.Migrations
 
                     b.HasIndex("AccountId");
 
-                    b.ToTable("BankUsers", (string)null);
-                });
-
-            modelBuilder.Entity("AccountingDB.Models.Location", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .HasColumnType("varchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique()
-                        .HasFilter("[Name] IS NOT NULL");
-
-                    b.ToTable("Locations", (string)null);
-                });
-
-            modelBuilder.Entity("AccountingDB.Models.Merchant", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .HasColumnType("varchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique()
-                        .HasFilter("[Name] IS NOT NULL");
-
-                    b.ToTable("Merchants", (string)null);
+                    b.ToTable("BankUsers");
                 });
 
             modelBuilder.Entity("AccountingDB.Models.Meta", b =>
@@ -110,34 +73,7 @@ namespace AccountingDB.Migrations
                         .IsUnique()
                         .HasFilter("[Content] IS NOT NULL");
 
-                    b.ToTable("Metas", (string)null);
-                });
-
-            modelBuilder.Entity("AccountingDB.Models.State", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("FullName")
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<string>("ShortName")
-                        .HasColumnType("varchar(10)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FullName")
-                        .IsUnique()
-                        .HasFilter("[FullName] IS NOT NULL");
-
-                    b.HasIndex("ShortName")
-                        .IsUnique()
-                        .HasFilter("[ShortName] IS NOT NULL");
-
-                    b.ToTable("States", (string)null);
+                    b.ToTable("Metas");
                 });
 
             modelBuilder.Entity("AccountingDB.Models.Transaction", b =>
@@ -163,46 +99,11 @@ namespace AccountingDB.Migrations
                     b.Property<DateTime?>("TransactionDate")
                         .HasColumnType("date");
 
-                    b.Property<int?>("TransactionMerchantId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AccountId");
 
-                    b.HasIndex("TransactionMerchantId");
-
-                    b.ToTable("Transactions", (string)null);
-                });
-
-            modelBuilder.Entity("AccountingDB.Models.TransactionMerchant", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("LocationId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("MerchantId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("StateId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MerchantId");
-
-                    b.HasIndex("StateId");
-
-                    b.HasIndex("LocationId", "MerchantId", "StateId")
-                        .IsUnique()
-                        .HasFilter("[LocationId] IS NOT NULL AND [MerchantId] IS NOT NULL AND [StateId] IS NOT NULL");
-
-                    b.ToTable("TransactionMerchants", (string)null);
+                    b.ToTable("Transactions");
                 });
 
             modelBuilder.Entity("AccountingDB.Models.TransactionMeta", b =>
@@ -229,7 +130,7 @@ namespace AccountingDB.Migrations
 
                     b.HasIndex("TransactionId");
 
-                    b.ToTable("TransactionMetas", (string)null);
+                    b.ToTable("TransactionMetas");
                 });
 
             modelBuilder.Entity("AccountingDB.Models.User", b =>
@@ -245,7 +146,7 @@ namespace AccountingDB.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("AccountingDB.Models.AccountUser", b =>
@@ -275,34 +176,7 @@ namespace AccountingDB.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AccountingDB.Models.TransactionMerchant", "MerchantLocation")
-                        .WithMany("Transactions")
-                        .HasForeignKey("TransactionMerchantId");
-
                     b.Navigation("Account");
-
-                    b.Navigation("MerchantLocation");
-                });
-
-            modelBuilder.Entity("AccountingDB.Models.TransactionMerchant", b =>
-                {
-                    b.HasOne("AccountingDB.Models.Location", "Location")
-                        .WithMany("TransactionMerchants")
-                        .HasForeignKey("LocationId");
-
-                    b.HasOne("AccountingDB.Models.Merchant", "Merchant")
-                        .WithMany("TransactionMerchants")
-                        .HasForeignKey("MerchantId");
-
-                    b.HasOne("AccountingDB.Models.State", "State")
-                        .WithMany("TransactionMerchants")
-                        .HasForeignKey("StateId");
-
-                    b.Navigation("Location");
-
-                    b.Navigation("Merchant");
-
-                    b.Navigation("State");
                 });
 
             modelBuilder.Entity("AccountingDB.Models.TransactionMeta", b =>
@@ -331,29 +205,9 @@ namespace AccountingDB.Migrations
                     b.Navigation("Transactions");
                 });
 
-            modelBuilder.Entity("AccountingDB.Models.Location", b =>
-                {
-                    b.Navigation("TransactionMerchants");
-                });
-
-            modelBuilder.Entity("AccountingDB.Models.Merchant", b =>
-                {
-                    b.Navigation("TransactionMerchants");
-                });
-
-            modelBuilder.Entity("AccountingDB.Models.State", b =>
-                {
-                    b.Navigation("TransactionMerchants");
-                });
-
             modelBuilder.Entity("AccountingDB.Models.Transaction", b =>
                 {
                     b.Navigation("TransactionMetas");
-                });
-
-            modelBuilder.Entity("AccountingDB.Models.TransactionMerchant", b =>
-                {
-                    b.Navigation("Transactions");
                 });
 
             modelBuilder.Entity("AccountingDB.Models.User", b =>

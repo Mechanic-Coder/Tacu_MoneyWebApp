@@ -13,27 +13,27 @@ namespace AccountingDB.Models
         
         [Column(TypeName = "date")]
         public DateTime? TransactionDate { get; set; }
-        
+
         /// <summary>
-        /// postive means debit 
-        /// negative means credit
+        /// postive  means credit/deposit/refund
+        /// negative means debit/withdrawal/payment
         /// </summary>
         [Column(TypeName = "money")]
         public decimal Amount { get; set; }
         
         public ICollection<TransactionMeta>? TransactionMetas { get; set; }
         
-        public int TransactionTypeId { get; set; }
-
-        [ForeignKey("TransactionTypeId")]
-        public TransactionType? TransactionType { get; set; }
-
         public string? ReferenceNumber { get; set; }
 
-        public int BankAccountId { get; set; }
+        public int AccountId { get; set; }
 
-        [ForeignKey("BankAccountId")]
+        [ForeignKey("AccountId")]
         public Account? Account { get; set; }
+        
+        public int? TransactionMerchantId { get; set; }
+        
+        [ForeignKey("TransactionMerchantId")]
+        public TransactionMerchant? TransactionMerchant { get; set; }
 
 
     }

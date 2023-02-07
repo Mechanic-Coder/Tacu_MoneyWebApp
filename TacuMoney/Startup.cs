@@ -27,9 +27,10 @@ namespace TacuMoney
         {
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddControllersWithViews();
-            //services.AddDbContext<TacuMoneyContext>(options => 
-            //    options.LogTo(x => Debug.WriteLine(x), LogLevel.Information));
-            
+            services.AddDbContext<TacuMoneyContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("TacuDB"))
+            .LogTo(x => Debug.WriteLine(x), LogLevel.Information));
+
             services.AddDbContext<AccountingContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("AccountingDB"))
                 .LogTo(x => Debug.WriteLine(x), LogLevel.Information));

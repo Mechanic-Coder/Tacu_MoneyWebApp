@@ -13,14 +13,22 @@ namespace AccountingDB
         public virtual DbSet<Meta> Metas { get; set; }
         public virtual DbSet<Transaction> Transactions { get; set; }
         public virtual DbSet<TransactionMeta> TransactionMetas { get; set; }
-        public virtual DbSet<TransactionType> TransactionTypes { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Merchant> Merchants{ get; set; }
+        public virtual DbSet<TransactionMerchant> TransactionMerchants { get; set; }
+        public virtual DbSet<State> States { get; set; }
+        public virtual DbSet<Location> Locations { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<AccountUser>().HasKey(x => new { x.UserId, x.AccountId });
             modelBuilder.Entity<Meta>().HasIndex(x => x.Content).IsUnique();
+            modelBuilder.Entity<Location>().HasIndex(x => x.Name).IsUnique();
+            modelBuilder.Entity<Merchant>().HasIndex(x => x.Name).IsUnique();
+            modelBuilder.Entity<State>().HasIndex(x => x.ShortName).IsUnique();
+            modelBuilder.Entity<State>().HasIndex(x => x.FullName).IsUnique();
+            modelBuilder.Entity<TransactionMerchant>().HasIndex(x => new { x.LocationId, x.MerchantId, x.StateId }).IsUnique();
 
             //put the meaning of each enum in the colum properties under "extended properties- MS_Description
             modelBuilder.Entity<TransactionMeta>().Property(x => x.MetaType)
