@@ -88,21 +88,7 @@ namespace TacuMoney.Controllers
                     return val;
                 }
 
-                //var metaHandler = new MetaHandling(_adb);
-                //var transList = new List<Transaction>();
-                //using (var sreader = new StreamReader(file.OpenReadStream()))
-                //{
-                //    var h = sreader.ReadLine().Split(',').Select((x, i) => new { Item = x, Index = i }).ToDictionary(x => x.Item.Replace("\"", "").Trim(), x => x.Index, StringComparer.OrdinalIgnoreCase);     //Title
-                //    while (!sreader.EndOfStream)                          //get all the content in rows 
-                //    {
 
-                //        var r = sreader.ReadLine().Split("\",\"");
-
-                //        string gV(string name)
-                //        {
-                //            var val = r[h[name]].Replace("\"", "").ToString();
-                //            return val;
-                //        }
                 var t = new Transaction
                 {
                     PostingDate = DateTime.Parse(gV("Posting Date")),
@@ -148,12 +134,7 @@ namespace TacuMoney.Controllers
                         );
                 }
                 return t;
-                //        transList.Add(t);
-                //    }
 
-                //}
-                //_adb.Transactions.AddRangeAsync(transList);
-                //_adb.SaveChanges();
             }
             Transaction ReadLocCC(StreamReader sr, Dictionary<string, int> h)
             {
